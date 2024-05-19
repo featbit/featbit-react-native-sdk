@@ -2,12 +2,12 @@
 
 ## Introduction
 
-This is the React client side SDK for the feature management platform [FeatBit](https://www.featbit.co).
+This is the React Native SDK for the feature management platform [FeatBit](https://www.featbit.co).
 
 Be aware, this is a client side SDK, it is intended for use in a single-user context, which can be mobile, desktop or embeded applications. This SDK is designed to be used for React Native projects.
 
 > The React Native SDK is based on the React Client SDK  
-The React SDK builds on FeatBit's React Client SDK (the latter depends on the JavaScript client SDK) to provide a better integration for use in React Native applications. As a result, much of the React Client SDK and JavaScript SDK functionality is also available for the React Native SDK to use.
+The React Native SDK builds on FeatBit's React Client SDK (the latter depends on the JavaScript client SDK) to provide a better integration for use in React Native applications. As a result, much of the React Client SDK and JavaScript SDK functionality is also available for the React Native SDK to use.
 
 ## Getting started
 ### Install
