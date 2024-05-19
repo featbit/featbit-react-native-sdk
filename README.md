@@ -106,6 +106,7 @@ export default withFbProvider(buildConfig({options}))(App);
 ## Examples
 
 - [React Native APP](./examples/ReactNativeApp)
+- [Expo Go APP](./examples/ExpoApp)
 
 ## SDK
 
