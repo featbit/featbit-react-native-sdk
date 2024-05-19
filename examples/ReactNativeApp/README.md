@@ -29,35 +29,25 @@ First, you will need to start **Metro**, the JavaScript _bundler_ that ships _wi
 To start Metro, run the following command from the _root_ of your React Native project:
 
 ```bash
-# using npm
-npm start
-
-# OR using Yarn
-yarn start
+   // In the root folder of the repo
+   npm install && npm run build
+   
+   // In the examples/ExpoApp folder
+   npm install
+   
+   // In the root folder of the repo
+   npm link ./examples/ExpoApp/node_modules/react
 ```
 
 ## Step 2: Start your Application
 
 Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
 
-### For Android
-
 ```bash
 # using npm
-npm run android
+npm run start
 
-# OR using Yarn
-yarn android
-```
-
-### For iOS
-
-```bash
-# using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
+// Then follow the instructions in the terminal to run the app in an emulator or on a physical device.
 ```
 
 If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.

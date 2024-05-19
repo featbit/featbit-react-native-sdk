@@ -23,13 +23,23 @@ This environment has the following flags:
 1. Install dependencies
 
    ```bash
+   // In the root folder of the repo
+   npm install && npm run build
+   
+   // In the examples/ExpoApp folder
    npm install
+   
+   // In the root folder of the repo
+   npm link ./examples/ExpoApp/node_modules/react
    ```
 
 2. Start the app
 
    ```bash
-    npx expo start
+   // In the examples/ExpoApp folder
+   npm run start
+   
+   // Then follow the instructions in the terminal to run the app in an emulator or on a physical device.
    ```
 
 In the output, you'll find options to open the app in a
@@ -46,4 +56,7 @@ You can start developing by editing the files inside the **app** directory. This
 
 ### Error: Hooks can only be called inside the body of a function component.
 if see error: Hooks can only be called inside the body of a function component. just run the following command in the root folder of the repo.
+
+```bash
 npm link ./examples/ExpoApp/node_modules/react
+```
