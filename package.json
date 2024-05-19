@@ -1,0 +1,47 @@
+{
+  "name": "@featbit/react-native-sdk",
+  "version": "1.0.0",
+  "description": "FeatBit client SDK for React Native",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "keywords": [
+    "FeatBit",
+    "React Native",
+    "feature flags"
+  ],
+  "scripts": {
+    "prebuild": "node -p \"'export const version = \\\"' + require('./package.json').version + '\\\"; export const name = \\\"' + require('./package.json').name + '\\\";'\" > src/version.ts",
+    "build": "npx tsc"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/featbit/featbit-react-native-sdk.git"
+  },
+  "author": "FeatBit",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/featbit/featbit-react-native-sdk/issues"
+  },
+  "homepage": "https://github.com/featbit/featbit-react-native-sdk#readme",
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-native": "0.74.0",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@featbit/react-client-sdk": "^1.0.3",
+    "@react-native-async-storage/async-storage": "^1.23.1",
+    "base64-js": "^1.5.1",
+    "event-target-shim": "^6.0.2"
+  }
+}
