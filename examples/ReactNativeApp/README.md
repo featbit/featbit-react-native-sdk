@@ -58,4 +58,6 @@ This is one way to run your app — you can also run it directly from within And
 
 ### Error: Hooks can only be called inside the body of a function component.
 if see error: Hooks can only be called inside the body of a function component. just run the following command in the root folder of the repo.
+```bash
 npm link ./examples/ReactNativeApp/node_modules/react
+```
