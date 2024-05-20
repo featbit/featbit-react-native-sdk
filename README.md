@@ -1,4 +1,4 @@
-# Featbit Client-Side SDK for React Native
+# FeatBit Client-Side SDK for React Native
 
 ## Introduction
 
