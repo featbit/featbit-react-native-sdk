@@ -1066,13 +1066,11 @@
   resolved "https://registry.npmjs.org/@eslint/js/-/js-8.57.0.tgz"
 
 "@featbit/react-native-sdk@file:../..":
-  version "1.0.0"
+  version "1.0.1"
   resolved "file:../.."
   dependencies:
     "@featbit/react-client-sdk" "^1.0.3"
     "@react-native-async-storage/async-storage" "^1.23.1"
-    base64-js "^1.5.1"
-    event-target-shim "^6.0.2"
 
 "@hapi/hoek@^9.0.0", "@hapi/hoek@^9.3.0":
   version "9.3.0"
