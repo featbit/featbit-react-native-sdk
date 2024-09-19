@@ -1,6 +1,6 @@
 {
   "name": "@featbit/react-native-sdk",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "FeatBit client SDK for React Native",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
