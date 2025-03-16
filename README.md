@@ -96,7 +96,7 @@ const options = {
         customizedProperties: []
     },
     sdkKey: 'YOUR ENVIRONMENT SECRET',
-    streamingUrl: 'THE STREAMING URL',
+    streamingUri: 'THE STREAMING URL',
     eventsUrl: 'THE EVENTS URL'
 };
 
@@ -133,7 +133,7 @@ const options = {
         customizedProperties: []
     },
     sdkKey: 'YOUR ENVIRONMENT SECRET',
-    streamingUrl: 'THE STREAMING URL',
+    streamingUri: 'THE STREAMING URL',
     eventsUrl: 'THE EVENTS URL'
 };
 
