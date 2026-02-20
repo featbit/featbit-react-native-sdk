@@ -1,1 +1,1 @@
-export const version = "4.2.5"; export const name = "@featbit/react-native-sdk";
+export const version = "4.2.7"; export const name = "@featbit/react-native-sdk";
