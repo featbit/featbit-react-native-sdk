@@ -5,6 +5,7 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import RobotComponent from '../RobotComponent';
+import TwoFlagsComponent from '../TwoFlagsComponent';
 
 export default function HomeScreen() {
   return (
@@ -21,6 +22,7 @@ export default function HomeScreen() {
         <HelloWave />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
+        <TwoFlagsComponent/>
         <RobotComponent/>
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
         <ThemedText>
