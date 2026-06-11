@@ -1,6 +1,6 @@
 {
   "name": "@featbit/react-native-sdk",
-  "version": "4.2.13",
+  "version": "4.2.14",
   "description": "FeatBit client SDK for React Native",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -35,11 +35,11 @@
     "@types/react": "^18.3.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "0.74.0",
+    "react-native": "0.76.x",
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@featbit/react-client-sdk": "4.2.13",
+    "@featbit/react-client-sdk": "4.2.14",
     "@react-native-async-storage/async-storage": "^1.23.1"
   }
 }
