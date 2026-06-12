@@ -143,3 +143,25 @@ const config = buildConfig({options});
 export default withFbProvider(config)(App);
 
 ```
+
+### Lifecycle-aware streaming
+
+When using streaming (`dataSyncMode: 'streaming'`), the SDK is lifecycle-aware out of the box. A
+WebSocket does not survive iOS background suspension or Android doze, and the OS may never deliver a
+clean `close`, so a naive client keeps pinging a dead socket and reconnects blindly on resume. To
+avoid this, the SDK drops the connection shortly after the app is backgrounded or goes offline and
+re-establishes it — with an immediate resync — on foreground / when connectivity returns.
+
+This is driven by React Native's `AppState` and is enabled automatically; there is nothing to wire
+up. Brief interruptions (the iOS app switcher, momentary network blips) are debounced so they don't
+churn the connection. If the app never backgrounds and never reports a network change, behaviour is
+identical to an always-on connection.
+
+Network-loss detection is optional. If you also install
+[`@react-native-community/netinfo`](https://github.com/react-native-netinfo/react-native-netinfo),
+the stream additionally pauses on network loss and resumes on reconnect; without it, `AppState`
+alone drives the behaviour.
+
+```
+npm install @react-native-community/netinfo
+```
