@@ -39,7 +39,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@featbit/react-client-sdk": "4.2.9",
+    "@featbit/react-client-sdk": "4.2.15",
     "@react-native-async-storage/async-storage": "^1.23.1"
   }
 }
