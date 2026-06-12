@@ -1,8 +1,7 @@
-import React from 'react';
 import {Text, View} from 'react-native';
 import {useFlags} from '@featbit/react-client-sdk';
 
-export default function TestCompoment() {
+export default function RobotComponent() {
   const {robot} = useFlags();
   return (
     <View

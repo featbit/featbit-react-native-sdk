@@ -4,7 +4,8 @@ import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import TestCompoment from '../TestComponent';
+import RobotComponent from '../RobotComponent';
+import TwoFlagsComponent from '../TwoFlagsComponent';
 
 export default function HomeScreen() {
   return (
@@ -21,7 +22,8 @@ export default function HomeScreen() {
         <HelloWave />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
-      <TestCompoment/>
+        <TwoFlagsComponent/>
+        <RobotComponent/>
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
         <ThemedText>
           Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
