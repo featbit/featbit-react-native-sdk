@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  unit:
+    name: Build & unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+
+  e2e:
+    name: End-to-end (Testcontainers)
+    runs-on: ubuntu-latest # GitHub-hosted runners include a working Docker daemon
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      # Pre-pull so container startup doesn't eat into per-test timeouts.
+      - name: Pull FeatBit stack images
+        run: |
+          docker pull postgres:15.10
+          docker pull featbit/featbit-api-server:latest
+          docker pull featbit/featbit-evaluation-server:latest
+      - name: Run e2e
+        run: npm run test:e2e
