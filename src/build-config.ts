@@ -17,7 +17,9 @@ export function buildConfig(config: ProviderConfig, debug: boolean = false): Pro
 
   let { store } = config.options!;
   if (!store) {
-    store = new ReactNativeStore(options);
+    // Pass the resolved logger: when the app supplies no logger, options.logger is undefined and
+    // ReactNativeStore would otherwise NPE on its first debug/error log path.
+    store = new ReactNativeStore({ ...options, logger });
   }
 
   return {
