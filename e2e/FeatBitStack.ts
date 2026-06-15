@@ -1,3 +1,6 @@
+import { execSync } from 'child_process';
+import * as fs from 'fs';
+import * as path from 'path';
 import { randomUUID } from 'crypto';
 import { GenericContainer, Network, StartedNetwork, StartedTestContainer, Wait } from 'testcontainers';
 
@@ -8,8 +11,8 @@ import { GenericContainer, Network, StartedNetwork, StartedTestContainer, Wait }
  *
  * This is a TypeScript port of the harness used by the Fluent Health Android SDK. The management
  * API flow (login -> discover workspace/org -> onboarding -> create flag) was derived empirically
- * against the live server. The Postgres init SQL under `e2e/initdb/` is vendored from
- * `featbit/featbit` (Apache-2.0).
+ * against the live server. The Postgres init SQL is sparse-cloned at runtime from
+ * `featbit/featbit` (Apache-2.0) — `infra/postgresql/docker-entrypoint-initdb.d`.
  */
 
 const API_PORT = 5000;
@@ -17,12 +20,6 @@ const EVAL_PORT = 5100;
 const FLAG_KEY = 'e2e-bool-flag';
 const PG_CONN =
   'Host=postgresql;Port=5432;Username=postgres;Password=please_change_me;Database=featbit';
-
-// Postgres runs *.sql in /docker-entrypoint-initdb.d alphabetically (v0.0.0 first).
-const INIT_SCRIPTS = [
-  'v0.0.0.sql', 'v5.0.4.sql', 'v5.0.5.sql', 'v5.1.0.sql',
-  'v5.2.0.sql', 'v5.2.1.sql', 'v5.3.0.sql', 'v5.3.2.sql', 'v5.4.0.sql',
-];
 
 export interface SeedResult {
   evaluationBaseUrl: string; // http://host:port
@@ -45,10 +42,32 @@ export class FeatBitStack {
   async start(): Promise<void> {
     this.network = await new Network().start();
 
-    const initFiles = INIT_SCRIPTS.map((name) => ({
-      source: `${__dirname}/initdb/${name}`,
-      target: `/docker-entrypoint-initdb.d/${name}`,
-    }));
+    // Sparse-clone only the initdb folder from the upstream featbit repo so we always run
+    // against the latest migrations without vendoring SQL files in this repo.
+    const tmpDir = path.join(__dirname, 'featbit-initdb');
+    let initFiles: Array<{ source: string; target: string }>;
+    try {
+      execSync(
+        `git clone --no-checkout --depth 1 --filter=blob:none https://github.com/featbit/featbit.git "${tmpDir}"`,
+        { stdio: 'pipe' },
+      );
+      execSync('git sparse-checkout set infra/postgresql/docker-entrypoint-initdb.d', {
+        cwd: tmpDir,
+        stdio: 'pipe',
+      });
+      execSync('git checkout', { cwd: tmpDir, stdio: 'pipe' });
+
+      const initdbDir = path.join(tmpDir, 'infra', 'postgresql', 'docker-entrypoint-initdb.d');
+      // Postgres runs scripts alphabetically, so sort to preserve migration order.
+      const sqlFiles = fs.readdirSync(initdbDir).filter((f) => f.endsWith('.sql')).sort();
+      initFiles = sqlFiles.map((name) => ({
+        source: path.join(initdbDir, name),
+        target: `/docker-entrypoint-initdb.d/${name}`,
+      }));
+    } catch (e) {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+      throw e;
+    }
 
     this.postgres = await new GenericContainer('postgres:15.10')
       .withNetwork(this.network)
@@ -58,6 +77,8 @@ export class FeatBitStack {
       .withStartupTimeout(120_000)
       .withWaitStrategy(Wait.forLogMessage(/database system is ready to accept connections/, 2))
       .start();
+
+    fs.rmSync(tmpDir, { recursive: true, force: true });
 
     const commonEnv = {
       DbProvider: 'Postgres',
