@@ -1,6 +1,6 @@
 {
   "name": "@featbit/react-native-sdk",
-  "version": "4.2.15",
+  "version": "4.2.16",
   "description": "FeatBit client SDK for React Native",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -48,7 +48,7 @@
     "ws": "^8.21.0"
   },
   "dependencies": {
-    "@featbit/react-client-sdk": "4.2.15",
+    "@featbit/react-client-sdk": "4.2.16",
     "@react-native-async-storage/async-storage": "^1.23.1"
   }
 }
