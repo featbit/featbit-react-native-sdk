@@ -17,7 +17,7 @@ export default function TwoFlagsComponent() {
       .build();
 
     fbClient?.identify(user);
-  }, [flagA]);
+  }, [fbClient, flagA]);
 
   return (
     <View
