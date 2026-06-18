@@ -9,15 +9,35 @@ export default function TwoFlagsComponent() {
   const fbClient = useFbClient();
 
   useEffect(() => {
-    const variationId = `203:${flagA}:exclusive`;
-    const user = new UserBuilder("fb-demo-user-key")
-      .name("the user name")
-      .custom("loggedIn", "true")
-      .custom("variationId", variationId)
-      .build();
+    if (!fbClient) return;
+    let active = true;
 
-    fbClient?.identify(user);
-  }, [fbClient, flagA]);
+    const loadVarations = async (keys: string[]) => {
+      const all = await fbClient.getAllVariations();
+      console.log('loadVarations', keys);
+      if (active) {
+        console.log('active in loadVariations');
+      }
+    }
+
+    fbClient.on("update", loadVarations);
+
+    return () => {
+      active = false;
+      fbClient.off("update", loadVarations);
+    }
+  }, [fbClient])
+
+  // useEffect(() => {
+  //   const variationId = `203:${flagA}:exclusive`;
+  //   const user = new UserBuilder("fb-demo-user-key")
+  //     .name("the user name")
+  //     .custom("loggedIn", "true")
+  //     .custom("variationId", variationId)
+  //     .build();
+  //
+  //   fbClient?.identify(user);
+  // }, [fbClient, flagA]);
 
   return (
     <View
