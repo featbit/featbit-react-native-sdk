@@ -6,7 +6,7 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
-import {buildConfig, withFbProvider} from '@featbit/react-native-sdk';
+import {buildConfig, UserBuilder, withFbProvider} from '@featbit/react-native-sdk';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -37,13 +37,15 @@ function RootLayout() {
   );
 }
 
+const user = new UserBuilder("fb-demo-user-key")
+  .name("the user name")
+  .custom("loggedIn", "true")
+  .custom("variationId", "203:b:exclusive")
+  .build();
+
 const options = {
-  user: {
-    name: 'the user name',
-    keyId: 'fb-demo-user-key',
-    customizedProperties: [],
-  },
-  sdkKey: 'Obg68EqYZk27JTxphPgy7At1aJ8GaAtEaIA1fb3IpuEA',
+  user,
+  sdkKey: '3QFLBQibTE6i1duL1WAK2A227SK-9N8k-9VqurJDE_Qw',
   streamingUri: 'wss://app-eval.featbit.co',
   eventsUri: 'https://app-eval.featbit.co',
 };
