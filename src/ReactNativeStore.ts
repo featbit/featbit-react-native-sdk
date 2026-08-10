@@ -42,14 +42,30 @@ export default class ReactNativeStore extends BaseStore {
     }
   }
 
+  // Keyed by the full serialized user (keyId + name + customizedProperties),
+  // not just keyId. Two identify() calls with the same keyId but different
+  // attributes (e.g. a custom "region" property changing) must not collide
+  // on the same cached entry, or a stale evaluation from the previous
+  // attribute set gets served after the flag's sync protocol treats the
+  // client as already up to date (see upstream featbit-js-client-sdk#fbcd618,
+  // which fixed the same issue for LocalStorageStore/InMemoryStore via a
+  // hashSerializeUser()-keyed cache). This SDK targets React Native's JS
+  // engine (Hermes), which does not reliably provide the Web Crypto API
+  // (crypto.subtle) used by that hash without an extra polyfill dependency,
+  // so this uses the plain serializeUser() string directly instead — the
+  // hash there is for key normalization, not a security requirement.
+  private storageKeyForCurrentUser(): string {
+    return `${StoreStorageKey}-${serializeUser(this._user)}`;
+  }
+
   protected override async dumpStoreToStorage(): Promise<void> {
-    const storageKey = `${StoreStorageKey}-${this._user.keyId}`;
+    const storageKey = this.storageKeyForCurrentUser();
 
     await this.set(storageKey, JSON.stringify(this.store));
   }
 
   protected override async loadStoreFromStorage(): Promise<void> {
-    const storageKey = `${StoreStorageKey}-${this._user.keyId}`;
+    const storageKey = this.storageKeyForCurrentUser();
     const dataStoreStr = await AsyncStorage.getItem(storageKey);
 
     let store: IStoreDataStorage | null = null;
