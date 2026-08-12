@@ -4,7 +4,7 @@ import {
   IStoreDataStorage,
   CurrentUserStorageKey,
   StoreStorageKey,
-  serializeUser, BaseStore
+  serializeUser, BaseStore, hashSerializeUser
 } from "@featbit/react-client-sdk";
 
 import AsyncStorage from './ConditionalAsyncStorage';
@@ -54,18 +54,19 @@ export default class ReactNativeStore extends BaseStore {
   // (crypto.subtle) used by that hash without an extra polyfill dependency,
   // so this uses the plain serializeUser() string directly instead — the
   // hash there is for key normalization, not a security requirement.
-  private storageKeyForCurrentUser(): string {
-    return `${StoreStorageKey}-${serializeUser(this._user)}`;
+  private async storageKeyForCurrentUser(): Promise<string> {
+    const userHash = await hashSerializeUser(this._user);
+    return `${StoreStorageKey}-${userHash}`;
   }
 
   protected override async dumpStoreToStorage(): Promise<void> {
-    const storageKey = this.storageKeyForCurrentUser();
+    const storageKey = await this.storageKeyForCurrentUser();
 
     await this.set(storageKey, JSON.stringify(this.store));
   }
 
   protected override async loadStoreFromStorage(): Promise<void> {
-    const storageKey = this.storageKeyForCurrentUser();
+    const storageKey = await this.storageKeyForCurrentUser();
     const dataStoreStr = await AsyncStorage.getItem(storageKey);
 
     let store: IStoreDataStorage | null = null;
