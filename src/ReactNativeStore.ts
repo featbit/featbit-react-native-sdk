@@ -4,7 +4,7 @@ import {
   IStoreDataStorage,
   CurrentUserStorageKey,
   StoreStorageKey,
-  serializeUser, BaseStore
+  serializeUser, BaseStore, hashSerializeUser
 } from "@featbit/react-client-sdk";
 
 import AsyncStorage from './ConditionalAsyncStorage';
@@ -42,14 +42,26 @@ export default class ReactNativeStore extends BaseStore {
     }
   }
 
-  protected override async dumpStoreToStorage(): Promise<void> {
-    const storageKey = `${StoreStorageKey}-${this._user.keyId}`;
+  // Keyed by the hashed full serialized user (keyId + name + customizedProperties),
+  // not just keyId. Two identify() calls with the same keyId but different
+  // attributes (e.g. a custom "region" property changing) must not collide
+  // on the same cached entry, or a stale evaluation from the previous
+  // attribute set gets served after the flag's sync protocol treats the
+  // client as already up to date (see upstream featbit-js-client-sdk#fbcd618,
+  // which fixed the same issue for LocalStorageStore/InMemoryStore via a
+  // hashSerializeUser()-keyed cache).
+  private async storageKeyForCurrentUser(): Promise<string> {
+    const userHash = await hashSerializeUser(this._user);
+    return `${StoreStorageKey}-${userHash}`;
+  }
 
+  protected override async dumpStoreToStorage(): Promise<void> {
+    const storageKey = await this.storageKeyForCurrentUser();
     await this.set(storageKey, JSON.stringify(this.store));
   }
 
   protected override async loadStoreFromStorage(): Promise<void> {
-    const storageKey = `${StoreStorageKey}-${this._user.keyId}`;
+    const storageKey = await this.storageKeyForCurrentUser();
     const dataStoreStr = await AsyncStorage.getItem(storageKey);
 
     let store: IStoreDataStorage | null = null;

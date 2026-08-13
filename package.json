@@ -1,6 +1,6 @@
 {
   "name": "@featbit/react-native-sdk",
-  "version": "4.3.0",
+  "version": "4.3.3",
   "description": "FeatBit client SDK for React Native",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,6 +12,7 @@
   "scripts": {
     "prebuild": "node -p \"'export const version = \\\"' + require('./package.json').version + '\\\"; export const name = \\\"' + require('./package.json').name + '\\\";'\" > src/version.ts",
     "build": "npx tsc",
+    "prepare": "npm run build",
     "test": "jest",
     "test:e2e": "cross-env FEATBIT_E2E=1 jest --config jest.e2e.config.js --runInBand"
   },
@@ -48,8 +49,8 @@
     "ws": "^8.21.0"
   },
   "dependencies": {
-    "@featbit/react-client-sdk": "4.3.0",
-    "@react-native-async-storage/async-storage": "^1.23.1"
+    "@featbit/react-client-sdk": "4.3.3",
+    "@react-native-async-storage/async-storage": "^1.23.1 || ^2.0.0"
   },
   "overrides": {
     "js-yaml": "^4.2.0",
