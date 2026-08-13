@@ -18,6 +18,7 @@ import { GenericContainer, Network, StartedNetwork, StartedTestContainer, Wait }
 const API_PORT = 5000;
 const EVAL_PORT = 5100;
 const FLAG_KEY = 'e2e-bool-flag';
+export const FEATBIT_STACK_VERSION = process.env.FEATBIT_STACK_VERSION ?? '5.4.4';
 const PG_CONN =
   'Host=postgresql;Port=5432;Username=postgres;Password=please_change_me;Database=featbit';
 
@@ -42,13 +43,14 @@ export class FeatBitStack {
   async start(): Promise<void> {
     this.network = await new Network().start();
 
-    // Sparse-clone only the initdb folder from the upstream featbit repo so we always run
-    // against the latest migrations without vendoring SQL files in this repo.
+    // The database scripts and server images must come from the same FeatBit release. Using
+    // the repository default branch with `latest` images makes a fresh CI runner behave
+    // differently from a developer machine whose Docker cache contains an older image.
     const tmpDir = path.join(__dirname, 'featbit-initdb');
     let initFiles: Array<{ source: string; target: string }>;
     try {
       execSync(
-        `git clone --no-checkout --depth 1 --filter=blob:none https://github.com/featbit/featbit.git "${tmpDir}"`,
+        `git clone --branch "${FEATBIT_STACK_VERSION}" --no-checkout --depth 1 --filter=blob:none https://github.com/featbit/featbit.git "${tmpDir}"`,
         { stdio: 'pipe' },
       );
       execSync('git sparse-checkout set infra/postgresql/docker-entrypoint-initdb.d', {
@@ -88,7 +90,7 @@ export class FeatBitStack {
     };
 
     [this.apiServer, this.evaluationServer] = await Promise.all([
-      new GenericContainer('featbit/featbit-api-server:latest')
+      new GenericContainer(`featbit/featbit-api-server:${FEATBIT_STACK_VERSION}`)
         .withNetwork(this.network)
         .withEnvironment({
           ...commonEnv,
@@ -100,7 +102,7 @@ export class FeatBitStack {
         .withWaitStrategy(Wait.forListeningPorts())
         .withStartupTimeout(240_000)
         .start(),
-      new GenericContainer('featbit/featbit-evaluation-server:latest')
+      new GenericContainer(`featbit/featbit-evaluation-server:${FEATBIT_STACK_VERSION}`)
         .withNetwork(this.network)
         .withEnvironment(commonEnv)
         .withExposedPorts(EVAL_PORT)

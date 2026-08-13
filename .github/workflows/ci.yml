@@ -23,6 +23,10 @@ jobs:
     name: End-to-end (Testcontainers)
     runs-on: ubuntu-latest # GitHub-hosted runners include a working Docker daemon
     timeout-minutes: 25
+    env:
+      # Keep this in sync with the default in e2e/FeatBitStack.ts. The harness uses the
+      # same release tag for its database scripts and both FeatBit server images.
+      FEATBIT_STACK_VERSION: 5.4.4
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
@@ -34,7 +38,7 @@ jobs:
       - name: Pull FeatBit stack images
         run: |
           docker pull postgres:15.10
-          docker pull featbit/featbit-api-server:latest
-          docker pull featbit/featbit-evaluation-server:latest
+          docker pull featbit/featbit-api-server:${FEATBIT_STACK_VERSION}
+          docker pull featbit/featbit-evaluation-server:${FEATBIT_STACK_VERSION}
       - name: Run e2e
         run: npm run test:e2e
