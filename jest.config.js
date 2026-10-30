@@ -8,6 +8,8 @@ module.exports = {
   // ts-jest (already configured below) transforms it like any other .ts file.
   moduleNameMapper: {
     '^@featbit/react-client-sdk$': '<rootDir>/node_modules/@featbit/react-client-sdk/src/index.ts',
+    // Resolve ESM-style .js imports against the SDK's TypeScript source files.
+    '^(\\.{1,2}/.*)\\.js$': '$1',
   },
   // The mapped path above still lives under node_modules, so it needs an
   // explicit carve-out from Jest's default "never transform node_modules" rule.
